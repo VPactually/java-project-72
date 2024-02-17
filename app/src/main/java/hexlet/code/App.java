@@ -1,7 +1,6 @@
 package hexlet.code;
 
 import io.javalin.Javalin;
-import io.javalin.config.JavalinConfig;
 import io.javalin.rendering.template.JavalinJte;
 
 import java.io.BufferedReader;
