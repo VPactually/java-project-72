@@ -20,7 +20,7 @@ public class UrlRepository extends BaseRepository {
             while (resultSet.next()) {
                 var id = resultSet.getInt("id");
                 var name = resultSet.getString("name");
-                final var createdAt = resultSet.getTimestamp("created_at");
+                var createdAt = resultSet.getTimestamp("created_at");
                 var url = new Url(id, name, createdAt);
                 result.add(url);
             }
@@ -52,11 +52,11 @@ public class UrlRepository extends BaseRepository {
         var sql = "SELECT * FROM urls WHERE id = ?";
         try (var conn = dataSource.getConnection();
              var stmt = conn.prepareStatement(sql)) {
-            stmt.setLong(1, id);
+            stmt.setInt(1, id);
             var resultSet = stmt.executeQuery();
             if (resultSet.next()) {
                 var name = resultSet.getString("name");
-                final var createdAt = new Timestamp(resultSet.getLong("created_at"));
+                var createdAt = resultSet.getTimestamp("created_at");
                 var course = new Url(id, name, createdAt);
                 return Optional.of(course);
             }
