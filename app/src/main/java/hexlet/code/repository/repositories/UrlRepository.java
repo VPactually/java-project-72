@@ -10,8 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static hexlet.code.repository.BaseRepository.dataSource;
-
 public class UrlRepository extends BaseRepository {
     public static List<Url> getEntities() {
         var sql = "SELECT * FROM urls";
@@ -22,8 +20,8 @@ public class UrlRepository extends BaseRepository {
             while (resultSet.next()) {
                 var id = resultSet.getInt("id");
                 var name = resultSet.getString("name");
-                var created_at = resultSet.getTimestamp("created_at");
-                var url = new Url(id, name, created_at);
+                final var createdAt = resultSet.getTimestamp("created_at");
+                var url = new Url(id, name, createdAt);
                 result.add(url);
             }
             return result;
@@ -37,7 +35,7 @@ public class UrlRepository extends BaseRepository {
         try (var conn = dataSource.getConnection();
              var preparedStatement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, url.getName());
-            preparedStatement.setTimestamp(2, url.getCreated_at());
+            preparedStatement.setTimestamp(2, url.getCreatedAt());
             preparedStatement.executeUpdate();
             var generatedKeys = preparedStatement.getGeneratedKeys();
             if (generatedKeys.next()) {
@@ -58,8 +56,8 @@ public class UrlRepository extends BaseRepository {
             var resultSet = stmt.executeQuery();
             if (resultSet.next()) {
                 var name = resultSet.getString("name");
-                var created_at = new Timestamp(resultSet.getLong("created_at"));
-                var course = new Url(id, name, created_at);
+                final var createdAt = new Timestamp(resultSet.getLong("created_at"));
+                var course = new Url(id, name, createdAt);
                 return Optional.of(course);
             }
             return Optional.empty();

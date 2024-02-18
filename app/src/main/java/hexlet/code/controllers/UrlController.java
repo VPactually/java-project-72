@@ -30,8 +30,8 @@ public class UrlController {
         try {
             var parsedUrl = new URI(url);
             var name = parsedUrl.getScheme() + "://" + parsedUrl.getAuthority();
-            var created_at = new Timestamp(new Date().getTime());
-            Url result = new Url(name, created_at);
+            var createdAt = new Timestamp(new Date().getTime());
+            Url result = new Url(name, createdAt);
             if (UrlRepository.getEntities().stream().anyMatch(u -> u.getName().equals(name))) {
                 ctx.sessionAttribute("flash", "Страница уже существует");
                 ctx.sessionAttribute("flashInfo", "info");

@@ -1,6 +1,10 @@
 package hexlet.code.model;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
 
 import java.sql.Timestamp;
 
@@ -11,11 +15,11 @@ import java.sql.Timestamp;
 public class Url {
     private int id;
     private String name;
-    private Timestamp created_at;
+    private Timestamp createdAt;
 
-    public Url(String name, Timestamp created_at) {
+    public Url(String name, Timestamp createdAt) {
         this.name = name;
-        this.created_at = created_at;
+        this.createdAt = createdAt;
     }
 
     @Override

@@ -20,7 +20,7 @@
                 </tr>
                 <tr>
                     <td>Дата создания</td>
-                    <td>${page.getUrl().getCreated_at().toString()}</td>
+                    <td>${page.getUrl().getCreatedAt().toString()}</td>
                 </tr>
                 </tbody>
             </table>
