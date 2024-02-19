@@ -10,8 +10,6 @@ import hexlet.code.controllers.UrlController;
 import hexlet.code.repository.BaseRepository;
 import io.javalin.Javalin;
 import io.javalin.rendering.template.JavalinJte;
-import io.javalin.router.EndpointNotFound;
-import com.mashape.unirest.http.HttpResponse;
 
 import java.io.BufferedReader;
 import java.io.IOException;
