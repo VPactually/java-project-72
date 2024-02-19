@@ -9,6 +9,7 @@ import hexlet.code.controllers.UrlController;
 import hexlet.code.repository.BaseRepository;
 import io.javalin.Javalin;
 import io.javalin.rendering.template.JavalinJte;
+import io.javalin.router.EndpointNotFound;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -70,6 +71,10 @@ public class App {
         app.get(NamedRoutes.urlsPath(), UrlController::index);
         app.post(NamedRoutes.urlsPath(), UrlController::add);
         app.get(NamedRoutes.urlPath("{id}"), UrlController::show);
+        app.exception(EndpointNotFound.class, (endpoint, ctx) -> {
+            ctx.status(404);
+            ctx.render("errors/404.jte");
+        });
 
         return app;
     }
