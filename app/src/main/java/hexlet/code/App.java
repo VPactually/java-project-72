@@ -5,11 +5,13 @@ import com.zaxxer.hikari.HikariDataSource;
 import gg.jte.ContentType;
 import gg.jte.TemplateEngine;
 import gg.jte.resolve.ResourceCodeResolver;
+import hexlet.code.controllers.DomainController;
 import hexlet.code.controllers.UrlController;
 import hexlet.code.repository.BaseRepository;
 import io.javalin.Javalin;
 import io.javalin.rendering.template.JavalinJte;
 import io.javalin.router.EndpointNotFound;
+import com.mashape.unirest.http.HttpResponse;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -77,7 +79,11 @@ public class App {
         app.get(NamedRoutes.urlsPath(), UrlController::index);
         app.post(NamedRoutes.urlsPath(), UrlController::add);
         app.get(NamedRoutes.urlPath("{id}"), UrlController::show);
-        app.exception(EndpointNotFound.class, (endpoint, ctx) -> {
+        app.post(NamedRoutes.urlPath("{id}"), DomainController::check);
+
+
+
+        app.exception(Exception.class, (endpoint, ctx) -> {
             ctx.status(404);
             ctx.render("errors/404.jte");
         });
