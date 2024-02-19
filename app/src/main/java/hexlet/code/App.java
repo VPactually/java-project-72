@@ -15,6 +15,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.sql.SQLException;
 import java.util.stream.Collectors;
 
 public class App {
@@ -25,7 +26,7 @@ public class App {
         return templateEngine;
     }
 
-    private static String readResourceFile(String fileName) throws IOException {
+    public static String readResourceFile(String fileName) throws IOException {
         var inputStream = App.class.getClassLoader().getResourceAsStream(fileName);
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
             return reader.lines().collect(Collectors.joining("\n"));
@@ -38,15 +39,7 @@ public class App {
         return Integer.valueOf(port);
     }
 
-
-    public static void main(String[] args) throws Exception {
-        var app = getApp();
-        app.start(getPort());
-    }
-
-
-    public static Javalin getApp() throws Exception {
-
+    private static HikariDataSource getDB() throws SQLException, IOException {
         var hikariConfig = new HikariConfig();
         hikariConfig.setJdbcUrl(System.getenv()
                 .getOrDefault("JDBC_DATABASE_URL", "jdbc:h2:mem:project;DB_CLOSE_DELAY=-1;"));
@@ -58,8 +51,21 @@ public class App {
              var statement = connection.createStatement()) {
             statement.execute(sql);
         }
+        return dataSource;
+    }
 
-        BaseRepository.dataSource = dataSource;
+
+    public static void main(String[] args) throws Exception {
+        var app = getApp();
+        app.start(getPort());
+    }
+
+
+    public static Javalin getApp() throws Exception {
+
+
+
+        BaseRepository.dataSource = getDB();
 
         var app = Javalin.create(javalinConfig -> {
             javalinConfig.bundledPlugins.enableDevLogging();
