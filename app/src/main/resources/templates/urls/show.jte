@@ -27,7 +27,7 @@
             </table>
 
             <h2 class="mt-5">Проверки</h2>
-            <form method="post" action="${NamedRoutes.urlPath(page.getUrl().getId())}">
+            <form method="post" action="${NamedRoutes.urlsChecksPath(page.getUrl().getId())}">
                 <button type="submit" class="btn btn-primary">Запустить проверку</button>
             </form>
 

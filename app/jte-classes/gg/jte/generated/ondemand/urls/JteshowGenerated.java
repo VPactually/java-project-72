@@ -22,7 +22,7 @@ public final class JteshowGenerated {
 				jteOutput.setContext("td", null);
 				jteOutput.writeUserContent(page.getUrl().getCreatedAt().toLocalDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
 				jteOutput.writeContent("</td>\n                </tr>\n                </tbody>\n            </table>\n\n            <h2 class=\"mt-5\">Проверки</h2>\n            <form method=\"post\"");
-				var __jte_html_attribute_0 = NamedRoutes.urlPath(page.getUrl().getId());
+				var __jte_html_attribute_0 = NamedRoutes.urlsChecksPath(page.getUrl().getId());
 				if (gg.jte.runtime.TemplateUtils.isAttributeRendered(__jte_html_attribute_0)) {
 					jteOutput.writeContent(" action=\"");
 					jteOutput.setContext("form", "action");
