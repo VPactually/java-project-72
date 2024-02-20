@@ -12,7 +12,7 @@ import java.sql.Timestamp;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Url {
+public final class Url {
     private int id;
     private String name;
     private Timestamp createdAt;
