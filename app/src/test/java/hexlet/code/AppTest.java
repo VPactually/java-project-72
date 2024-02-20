@@ -51,8 +51,12 @@ public class AppTest {
     }
 
     @BeforeEach
-    public final void beforeEach() throws Exception {
-        app = App.getApp();
+    public final void beforeEach() {
+        try {
+            app = App.getApp();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @AfterAll
