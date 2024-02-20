@@ -1,5 +1,6 @@
 @import hexlet.code.NamedRoutes
 @import hexlet.code.dto.urls.UrlPage
+@import java.time.format.DateTimeFormatter
 @param UrlPage page
 
 @template.layout.page(page = page, content = @`
@@ -20,7 +21,7 @@
                 </tr>
                 <tr>
                     <td>Дата создания</td>
-                    <td>${page.getUrl().getCreatedAt().toString()}</td>
+                    <td>${page.getUrl().getCreatedAt().toLocalDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))}</td>
                 </tr>
                 </tbody>
             </table>
@@ -32,34 +33,41 @@
 
             <table class="table table-bordered table-hover mt-3">
                 <thead>
-                <tr><th class="col-1">ID</th>
+                <tr>
+                    <th class="col-1">ID</th>
                     <th class="col-1">Код ответа</th>
                     <th>Заголовок</th>
                     <th>Заголовок первого уровня</th>
                     <th>Описание</th>
                     <th class="col-2">Дата проверки</th>
-                </tr></thead>
-                <tbody>
-                <tr>
-                    <td>
-
-                    </td>
-                    <td>
-
-                    </td>
-                    <td>
-
-                    </td>
-                    <td>
-
-                    </td>
-                    <td>
-
-                    </td>
-                    <td>
-
-                    </td>
                 </tr>
+                </thead>
+                <tbody>
+
+                @if (!page.getUrlChecks().isEmpty())
+                    @for(var check : page.getUrlChecks())
+                        <tr>
+                            <td>
+                                ${check.getId()}
+                            </td>
+                            <td>
+                                ${check.getStatusCode()}
+                            </td>
+                            <td>
+                                ${check.getTitle()}
+                            </td>
+                            <td>
+                                ${check.getH1()}
+                            </td>
+                            <td>
+                                ${check.getDescription()}
+                            </td>
+                            <td>
+                                ${check.getCreatedAt().toLocalDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))}
+                            </td>
+                        </tr>
+                    @endfor
+                @endif
                 </tbody>
             </table>
         </div>

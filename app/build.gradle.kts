@@ -36,9 +36,9 @@ dependencies {
     testImplementation(platform("org.junit:junit-bom:5.9.2"))
     testImplementation("org.junit.jupiter:junit-jupiter:5.9.2")
     testImplementation("org.assertj:assertj-core:3.24.2")
-    implementation("com.konghq:unirest-java-bom:4.2.9")
-    compileOnly("com.konghq:unirest-java-core:4.2.9")
-//    implementation("com.mashape.unirest:unirest-java:1.4.9")
+    implementation("com.konghq:unirest-java:3.14.5")
+    implementation("org.jsoup:jsoup:1.17.2")
+    testImplementation("org.mockito:mockito-core:5.10.0")
 }
 
 tasks.jacocoTestReport {

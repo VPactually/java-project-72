@@ -5,6 +5,7 @@ import hexlet.code.dto.urls.UrlPage;
 import hexlet.code.dto.urls.UrlsPage;
 import hexlet.code.model.BasePage;
 import hexlet.code.model.Url;
+import hexlet.code.repository.repositories.DomainRepository;
 import hexlet.code.repository.repositories.UrlRepository;
 import io.javalin.http.Context;
 
@@ -18,6 +19,7 @@ public class UrlController {
         var flash = ctx.consumeSessionAttribute("flash");
         var flashInfo = ctx.consumeSessionAttribute("flashInfo");
         var page = new UrlsPage(UrlRepository.getEntities());
+
         if (flash != null && flashInfo != null) {
             page.setFlash(flash);
             page.setFlashInfo(flashInfo.toString());
@@ -49,7 +51,15 @@ public class UrlController {
 
     public static void show(Context ctx) {
         int id = ctx.pathParamAsClass("id", Integer.class).get();
-        var page = new UrlPage(UrlRepository.find(id).get());
+        var url = UrlRepository.find(id).isPresent() ? UrlRepository.find(id).get() : null;
+        var checks = DomainRepository.getEntitiesById(id);
+        var flash = ctx.consumeSessionAttribute("flash");
+        var flashInfo = ctx.consumeSessionAttribute("flashInfo");
+        var page = new UrlPage(url, checks);
+        if (flash != null && flashInfo != null) {
+            page.setFlash(flash);
+            page.setFlashInfo(flashInfo.toString());
+        }
         ctx.render("urls/show.jte", Collections.singletonMap("page", page));
     }
 

@@ -64,7 +64,6 @@ public class App {
     public static Javalin getApp() throws Exception {
 
 
-
         BaseRepository.dataSource = getDB();
 
         var app = Javalin.create(javalinConfig -> {
@@ -80,11 +79,10 @@ public class App {
         app.post(NamedRoutes.urlPath("{id}"), DomainController::check);
 
 
-
-        app.exception(Exception.class, (endpoint, ctx) -> {
-            ctx.status(404);
-            ctx.render("errors/404.jte");
-        });
+//        app.exception(Exception.class, (endpoint, ctx) -> {
+//            ctx.status(404);
+//            ctx.render("errors/404.jte");
+//        });
 
         return app;
     }

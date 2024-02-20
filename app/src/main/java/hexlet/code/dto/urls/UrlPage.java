@@ -2,13 +2,24 @@ package hexlet.code.dto.urls;
 
 import hexlet.code.model.BasePage;
 import hexlet.code.model.Url;
-import lombok.AllArgsConstructor;
+import hexlet.code.model.UrlCheck;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
 public class UrlPage extends BasePage {
     private Url url;
+    private List<UrlCheck> urlChecks = new ArrayList<>();
+
+    public UrlPage(Url url, List<UrlCheck> urlChecks) {
+        this.url = url;
+        this.urlChecks = urlChecks;
+    }
+
+    public UrlPage(Object flash, String flashInfo, Url url) {
+        super(flash, flashInfo);
+        this.url = url;
+    }
 }
