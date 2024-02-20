@@ -31,6 +31,9 @@ public class UrlController {
         var url = ctx.formParamAsClass("url", String.class).get();
         try {
             var parsedUrl = new URI(url);
+            if (!parsedUrl.getScheme().startsWith("http")) {
+                throw new Exception();
+            }
             var name = parsedUrl.getScheme() + "://" + parsedUrl.getAuthority();
             var createdAt = new Timestamp(new Date().getTime());
             Url result = new Url(name, createdAt);

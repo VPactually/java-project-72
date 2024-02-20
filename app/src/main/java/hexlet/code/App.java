@@ -77,8 +77,6 @@ public class App {
         app.post(NamedRoutes.urlsPath(), UrlController::add);
         app.get(NamedRoutes.urlPath("{id}"), UrlController::show);
         app.post(NamedRoutes.urlPath("{id}"), DomainController::check);
-
-
         app.exception(Exception.class, (endpoint, ctx) -> {
             ctx.status(404);
             ctx.render("errors/404.jte");
