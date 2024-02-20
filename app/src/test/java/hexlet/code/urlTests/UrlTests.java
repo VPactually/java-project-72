@@ -16,6 +16,7 @@ import io.javalin.testtools.JavalinTest;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 import static hexlet.code.App.readResourceFile;
@@ -93,7 +94,8 @@ public class UrlTests {
             var response = client.get(NamedRoutes.urlPath(id));
             var body = response.body().string();
             assertThat(response.code()).isEqualTo(200);
-            assertThat(body).contains(instance.getCreatedAt().toString());
+            assertThat(body).contains(instance.getCreatedAt()
+                    .toLocalDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
             assertThat(body).contains(url);
         });
     }
