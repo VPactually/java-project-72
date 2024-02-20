@@ -55,33 +55,35 @@ public class App {
     }
 
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         var app = getApp();
         app.start(getPort());
     }
 
 
-    public static Javalin getApp() throws Exception {
+    public static Javalin getApp() {
 
+        try {
+            BaseRepository.dataSource = getDB();
 
-        BaseRepository.dataSource = getDB();
+            var app = Javalin.create(javalinConfig -> {
+                javalinConfig.bundledPlugins.enableDevLogging();
+                javalinConfig.fileRenderer(new JavalinJte(createTemplateEngine()));
 
-        var app = Javalin.create(javalinConfig -> {
-            javalinConfig.bundledPlugins.enableDevLogging();
-            javalinConfig.fileRenderer(new JavalinJte(createTemplateEngine()));
+            });
 
-        });
-
-        app.get(NamedRoutes.rootPath(), ctx -> ctx.render("index.jte"));
-        app.get(NamedRoutes.urlsPath(), UrlController::index);
-        app.post(NamedRoutes.urlsPath(), UrlController::add);
-        app.get(NamedRoutes.urlPath("{id}"), UrlController::show);
-        app.post(NamedRoutes.urlPath("{id}"), DomainController::check);
-        app.exception(Exception.class, (endpoint, ctx) -> {
-            ctx.status(404);
-            ctx.render("errors/404.jte");
-        });
-
-        return app;
+            app.get(NamedRoutes.rootPath(), ctx -> ctx.render("index.jte"));
+            app.get(NamedRoutes.urlsPath(), UrlController::index);
+            app.post(NamedRoutes.urlsPath(), UrlController::add);
+            app.get(NamedRoutes.urlPath("{id}"), UrlController::show);
+            app.post(NamedRoutes.urlPath("{id}"), DomainController::check);
+            app.exception(Exception.class, (endpoint, ctx) -> {
+                ctx.status(404);
+                ctx.render("errors/404.jte");
+            });
+            return app;
+        } catch (Exception e) {
+            throw new RuntimeException();
+        }
     }
 }
