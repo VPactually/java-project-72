@@ -137,7 +137,7 @@ public class AppTest {
         Url urlForCheck = new Url(url, new Timestamp(new Date().getTime()));
         UrlRepository.save(urlForCheck);
         JavalinTest.test(app, (server, client) -> {
-            var response = client.post(NamedRoutes.urlsChecksPath(urlForCheck.getId()));
+            var response = client.post(NamedRoutes.urlPath(urlForCheck.getId()));
             try {
                 assertThat(response.code()).isEqualTo(200);
                 var lastCheck = DomainRepository.find(urlForCheck.getId()).orElseThrow();
