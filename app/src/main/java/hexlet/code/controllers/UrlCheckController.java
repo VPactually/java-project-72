@@ -9,10 +9,6 @@ import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
 import org.jsoup.Jsoup;
 
-import java.sql.Timestamp;
-import java.util.Date;
-
-
 public class UrlCheckController {
     public static void check(Context ctx) {
         int urlId = ctx.pathParamAsClass("id", Integer.class).get();

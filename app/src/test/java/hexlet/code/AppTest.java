@@ -111,7 +111,6 @@ public class AppTest {
             assertThat(lastCheck.getTitle()).isEqualTo("Example Domain");
             assertThat(lastCheck.getH1()).isEqualTo("Example Domain");
             assertThat(lastCheck.getDescription()).isEqualTo("");
-
-    });
-}
+        });
+    }
 }

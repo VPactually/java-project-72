@@ -1,11 +1,7 @@
 @import hexlet.code.dto.urls.UrlsPage
 @import hexlet.code.NamedRoutes
-@import hexlet.code.model.UrlCheck
 @import hexlet.code.repository.UrlCheckRepository
-@import java.sql.Timestamp
-@import java.time.LocalDateTime
 @import java.time.format.DateTimeFormatter
-@import java.util.Comparator
 @param UrlsPage page
 
 @template.layout.page(page = page,
