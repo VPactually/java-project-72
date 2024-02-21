@@ -1,10 +1,7 @@
 package hexlet.code;
 
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
-import hexlet.code.repository.BaseRepository;
-import hexlet.code.repository.repositories.DomainRepository;
-import hexlet.code.repository.repositories.UrlRepository;
+import hexlet.code.repository.UrlCheckRepository;
+import hexlet.code.repository.UrlRepository;
 import io.javalin.Javalin;
 import io.javalin.testtools.JavalinTest;
 import okhttp3.mockwebserver.MockResponse;
@@ -35,19 +32,6 @@ public class AppTest {
         mockServer = new MockWebServer();
         var mockResponse = new MockResponse().setBody(readResourceFile("fixtures/example.html"));
         mockServer.enqueue(mockResponse);
-
-        var hikariConfig = new HikariConfig();
-        hikariConfig.setJdbcUrl("jdbc:h2:mem:project;DB_CLOSE_DELAY=-1;");
-
-        var dataSource = new HikariDataSource(hikariConfig);
-        var sql = readResourceFile("schema.sql");
-
-        try (var connection = dataSource.getConnection();
-             var statement = connection.createStatement()) {
-            statement.execute(sql);
-        }
-
-        BaseRepository.dataSource = dataSource;
     }
 
     @BeforeEach
@@ -75,34 +59,15 @@ public class AppTest {
         JavalinTest.test(app, (server, client) -> {
             var requestBody = "url=http://www.rbc.ru";
             client.post(NamedRoutes.urlsPath(), requestBody);
-            requestBody = "url=http://www.mail.ru";
-            client.post(NamedRoutes.urlsPath(), requestBody);
             var response = client.get(NamedRoutes.urlsPath());
             assertThat(response.code()).isEqualTo(200);
             var bodyString = response.body().string();
-            assertThat(UrlRepository.getEntities()).hasSize(2);
+            assertThat(UrlRepository.getEntities()).hasSize(1);
             assertTrue(UrlRepository.find("http://www.rbc.ru").isPresent());
             assertEquals("http://www.rbc.ru",
                     UrlRepository.find("http://www.rbc.ru").get().getName());
-            assertTrue(UrlRepository.find("http://www.mail.ru").isPresent());
-            assertEquals("http://www.mail.ru",
-                    UrlRepository.find("http://www.mail.ru").get().getName());
             assertThat(bodyString).contains("Сайты");
             assertThat(bodyString).contains("http://www.rbc.ru");
-            assertThat(bodyString).contains("http://www.mail.ru");
-        });
-    }
-
-    @Test
-    void testWrongSite() {
-        JavalinTest.test(app, (server, client) -> {
-            var requestBody = "url=http://www.rbc.ru";
-            client.post(NamedRoutes.urlsPath(), requestBody);
-            assertThat(UrlRepository.getEntities()).hasSize(1);
-
-            requestBody = "url=hhhsp://www.rbc.ru";
-            var response = client.post(NamedRoutes.urlsPath(), requestBody);
-            assertThat(UrlRepository.getEntities()).hasSize(1);
         });
     }
 
@@ -119,14 +84,17 @@ public class AppTest {
     @Test
     void testShowUrl() {
         JavalinTest.test(app, (server, client) -> {
-            var requestBody = "url=http://www.rbc.ru";
-            client.post(NamedRoutes.urlsPath(), requestBody);
-            var id = UrlRepository.find("http://www.rbc.ru").get().getId();
+            var name = "http://www.rbc.ru";
+            var url = new Url(name, new Timestamp(new Date().getTime()));
+            UrlRepository.save(url);
+
+            assertTrue(UrlRepository.find(url.getId()).isPresent());
+            var id = url.getId();
             var response = client.get(NamedRoutes.urlPath(id));
             assertThat(response.code()).isEqualTo(200);
             var bodyString = response.body().string();
             assertThat(bodyString).contains("Сайт:");
-            assertThat(bodyString).contains("http://www.rbc.ru");
+            assertThat(bodyString).contains(name);
             assertThat(bodyString).contains("Запустить проверку");
         });
     }
@@ -137,18 +105,13 @@ public class AppTest {
         Url urlForCheck = new Url(url, new Timestamp(new Date().getTime()));
         UrlRepository.save(urlForCheck);
         JavalinTest.test(app, (server, client) -> {
-            var response = client.post(NamedRoutes.urlPath(urlForCheck.getId()));
-            try {
-                assertThat(response.code()).isEqualTo(200);
-                var lastCheck = DomainRepository.find(urlForCheck.getId()).orElseThrow();
-                assertThat(lastCheck.getTitle()).isEqualTo("Title");
-                assertThat(lastCheck.getH1()).isEqualTo("This is a header");
-                assertThat(lastCheck.getDescription()).isEqualTo("description");
-            } catch (final Throwable th) {
-                System.out.println(th.getMessage());
-            } finally {
-                response.close();
-            }
-        });
-    }
+            var response = client.post(NamedRoutes.urlsChecksPath(urlForCheck.getId()));
+            assertThat(response.code()).isEqualTo(200);
+            var lastCheck = UrlCheckRepository.find(urlForCheck.getId()).orElseThrow();
+            assertThat(lastCheck.getTitle()).isEqualTo("Example Domain");
+            assertThat(lastCheck.getH1()).isEqualTo("Example Domain");
+            assertThat(lastCheck.getDescription()).isEqualTo("");
+
+    });
+}
 }

@@ -1,29 +1,33 @@
-package hexlet.code.repository.repositories;
+package hexlet.code.repository;
 
 import hexlet.code.model.UrlCheck;
 
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import static hexlet.code.repository.BaseRepository.dataSource;
 
-public class DomainRepository {
+public class UrlCheckRepository {
     public static void save(UrlCheck urlCheck) {
         String sql = "INSERT INTO url_checks ("
                 + "url_id, status_code, h1, title, description, created_at)"
                 + " VALUES (?, ?, ?, ?, ?, ?)";
         try (var conn = dataSource.getConnection();
              var preparedStatement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            var createdAt = new Timestamp(new Date().getTime());
             preparedStatement.setInt(1, urlCheck.getUrlId());
             preparedStatement.setInt(2, urlCheck.getStatusCode());
             preparedStatement.setString(3, urlCheck.getH1());
             preparedStatement.setString(4, urlCheck.getTitle());
             preparedStatement.setString(5, urlCheck.getDescription());
-            preparedStatement.setTimestamp(6, urlCheck.getCreatedAt());
+            preparedStatement.setTimestamp(6, createdAt);
             preparedStatement.executeUpdate();
+            urlCheck.setCreatedAt(createdAt);
             var generatedKeys = preparedStatement.getGeneratedKeys();
             if (generatedKeys.next()) {
                 urlCheck.setId(generatedKeys.getInt(1));
@@ -48,7 +52,8 @@ public class DomainRepository {
                 var title = resultSet.getString("title");
                 var description = resultSet.getString("description");
                 var createdAt = resultSet.getTimestamp("created_at");
-                var check = new UrlCheck(urlId, statusCode, title, h1, description, createdAt);
+                var check = new UrlCheck(urlId, statusCode, title, h1, description);
+                check.setCreatedAt(createdAt);
                 return Optional.of(check);
             }
             return Optional.empty();
@@ -71,7 +76,8 @@ public class DomainRepository {
                 var h1 = resultSet.getString("h1");
                 var description = resultSet.getString("description");
                 var createdAt = resultSet.getTimestamp("created_at");
-                var urlCheck = new UrlCheck(id, urlId, statusCode, title, h1, description, createdAt);
+                var urlCheck = new UrlCheck(id, urlId, statusCode, title, h1, description);
+                urlCheck.setCreatedAt(createdAt);
                 result.add(urlCheck);
             }
             return result;

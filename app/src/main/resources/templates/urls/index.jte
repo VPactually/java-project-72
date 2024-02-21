@@ -1,7 +1,7 @@
 @import hexlet.code.dto.urls.UrlsPage
 @import hexlet.code.NamedRoutes
 @import hexlet.code.model.UrlCheck
-@import hexlet.code.repository.repositories.DomainRepository
+@import hexlet.code.repository.UrlCheckRepository
 @import java.sql.Timestamp
 @import java.time.LocalDateTime
 @import java.time.format.DateTimeFormatter
@@ -33,17 +33,17 @@ content = @`
                         <a href="${NamedRoutes.urlPath(url.getId())}">${url.getName()}</a>
                     </td>
                     <td>
-                        @if(DomainRepository.find(url.getId()).isPresent())
-                            ${DomainRepository.getEntitiesById(url.getId())
-                            .get(DomainRepository.getEntitiesById(url.getId()).size() - 1)
+                        @if(UrlCheckRepository.find(url.getId()).isPresent())
+                            ${UrlCheckRepository.getEntitiesById(url.getId())
+                            .get(UrlCheckRepository.getEntitiesById(url.getId()).size() - 1)
                             .getCreatedAt().toLocalDateTime()
                             .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))}
                         @endif
                     </td>
                     <td>
-                        @if(DomainRepository.find(url.getId()).isPresent())
-                            ${DomainRepository.getEntitiesById(url.getId())
-                            .get(DomainRepository.getEntitiesById(url.getId()).size() - 1)
+                        @if(UrlCheckRepository.find(url.getId()).isPresent())
+                            ${UrlCheckRepository.getEntitiesById(url.getId())
+                            .get(UrlCheckRepository.getEntitiesById(url.getId()).size() - 1)
                             .getStatusCode()}
                         @endif
                     </td>

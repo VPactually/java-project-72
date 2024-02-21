@@ -16,14 +16,23 @@ public class UrlCheck {
     private String title;
     private String h1;
     private String description;
+    @Setter
     private Timestamp createdAt;
 
-    public UrlCheck(int urlId, int statusCode, String title, String h1, String description, Timestamp createdAt) {
+    public UrlCheck(int urlId, int statusCode, String title, String h1, String description) {
         this.statusCode = statusCode;
         this.title = title;
         this.h1 = h1;
         this.description = description;
         this.urlId = urlId;
-        this.createdAt = createdAt;
+    }
+
+    public UrlCheck(int id, int urlId, int statusCode, String title, String h1, String description) {
+        this.id = id;
+        this.urlId = urlId;
+        this.statusCode = statusCode;
+        this.title = title;
+        this.h1 = h1;
+        this.description = description;
     }
 }

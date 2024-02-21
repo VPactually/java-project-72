@@ -1,4 +1,4 @@
-package hexlet.code.repository.repositories;
+package hexlet.code.repository;
 
 import hexlet.code.model.Url;
 import hexlet.code.repository.BaseRepository;
@@ -84,7 +84,7 @@ public class UrlRepository extends BaseRepository {
         }
     }
 
-    public static int size() {
+    public static int count() {
         String sql = "SELECT COUNT(*) FROM urls";
         try (var conn = dataSource.getConnection();
              var preparedStatement = conn.prepareStatement(sql)) {

@@ -5,7 +5,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import gg.jte.ContentType;
 import gg.jte.TemplateEngine;
 import gg.jte.resolve.ResourceCodeResolver;
-import hexlet.code.controllers.DomainController;
+import hexlet.code.controllers.UrlCheckController;
 import hexlet.code.controllers.UrlController;
 import hexlet.code.repository.BaseRepository;
 import io.javalin.Javalin;
@@ -76,7 +76,7 @@ public class App {
             app.get(NamedRoutes.urlsPath(), UrlController::index);
             app.post(NamedRoutes.urlsPath(), UrlController::add);
             app.get(NamedRoutes.urlPath("{id}"), UrlController::show);
-            app.post(NamedRoutes.urlsChecksPath("{id}"), DomainController::check);
+            app.post(NamedRoutes.urlsChecksPath("{id}"), UrlCheckController::check);
             app.get(NamedRoutes.urlsChecksPath("{id}"), UrlController::show);
             app.exception(Exception.class, (endpoint, ctx) -> {
                 ctx.status(404);

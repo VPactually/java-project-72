@@ -5,8 +5,8 @@ import hexlet.code.dto.urls.UrlPage;
 import hexlet.code.dto.urls.UrlsPage;
 import hexlet.code.model.BasePage;
 import hexlet.code.model.Url;
-import hexlet.code.repository.repositories.DomainRepository;
-import hexlet.code.repository.repositories.UrlRepository;
+import hexlet.code.repository.UrlCheckRepository;
+import hexlet.code.repository.UrlRepository;
 import io.javalin.http.Context;
 
 import java.net.URI;
@@ -55,7 +55,7 @@ public class UrlController {
     public static void show(Context ctx) {
         int id = ctx.pathParamAsClass("id", Integer.class).get();
         var url = UrlRepository.find(id).isPresent() ? UrlRepository.find(id).get() : null;
-        var checks = DomainRepository.getEntitiesById(id);
+        var checks = UrlCheckRepository.getEntitiesById(id);
         var flash = ctx.consumeSessionAttribute("flash");
         var flashInfo = ctx.consumeSessionAttribute("flashInfo");
         var page = new UrlPage(url, checks);
