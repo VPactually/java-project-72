@@ -1,5 +1,5 @@
 @import gg.jte.Content
-@import hexlet.code.model.BasePage
+@import hexlet.code.dto.BasePage
 @param Content content
 @param BasePage page
 

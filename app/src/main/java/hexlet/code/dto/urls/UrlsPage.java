@@ -1,7 +1,7 @@
 package hexlet.code.dto.urls;
 
 import hexlet.code.model.Url;
-import hexlet.code.model.BasePage;
+import hexlet.code.dto.BasePage;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

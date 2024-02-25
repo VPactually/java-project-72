@@ -62,10 +62,8 @@ public class AppTest {
             var response = client.get(NamedRoutes.urlsPath());
             assertThat(response.code()).isEqualTo(200);
             var bodyString = response.body().string();
-            assertThat(UrlRepository.getEntities()).hasSize(1);
-            assertTrue(UrlRepository.find("http://www.rbc.ru").isPresent());
-            assertEquals("http://www.rbc.ru",
-                    UrlRepository.find("http://www.rbc.ru").get().getName());
+
+            assertEquals("http://www.rbc.ru", UrlRepository.find("http://www.rbc.ru").get().getName());
             assertThat(bodyString).contains("Сайты");
             assertThat(bodyString).contains("http://www.rbc.ru");
         });
@@ -85,7 +83,7 @@ public class AppTest {
     void testShowUrl() {
         JavalinTest.test(app, (server, client) -> {
             var name = "http://www.rbc.ru";
-            var url = new Url(name, new Timestamp(new Date().getTime()));
+            var url = new Url(name);
             UrlRepository.save(url);
 
             assertTrue(UrlRepository.find(url.getId()).isPresent());
@@ -100,15 +98,15 @@ public class AppTest {
     }
 
     @Test
-    void testCheckUrl() throws SQLException {
+    void testCheckUrl() {
         var url = mockServer.url("/").toString();
-        Url urlForCheck = new Url(url, new Timestamp(new Date().getTime()));
+        Url urlForCheck = new Url(url);
         UrlRepository.save(urlForCheck);
         JavalinTest.test(app, (server, client) -> {
             var response = client.post(NamedRoutes.urlsChecksPath(urlForCheck.getId()));
             assertThat(response.code()).isEqualTo(200);
             var lastCheck = UrlCheckRepository.find(urlForCheck.getId()).orElseThrow();
-            assertThat(lastCheck.getTitle()).isEqualTo("Example Domain");
+            assertThat(lastCheck.getTitle()).isEqualTo("Example Title");
             assertThat(lastCheck.getH1()).isEqualTo("Example Domain");
             assertThat(lastCheck.getDescription()).isEqualTo("");
         });

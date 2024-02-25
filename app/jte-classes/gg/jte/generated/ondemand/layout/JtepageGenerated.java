@@ -1,6 +1,6 @@
 package gg.jte.generated.ondemand.layout;
 import gg.jte.Content;
-import hexlet.code.model.BasePage;
+import hexlet.code.dto.BasePage;
 public final class JtepageGenerated {
 	public static final String JTE_NAME = "layout/page.jte";
 	public static final int[] JTE_LINE_INFO = {0,0,1,2,2,2,38,38,38,40,40,40,40,41,41,41,45,45,46,46,46,60,60,60,2,3,3,3,3};

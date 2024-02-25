@@ -1,5 +1,5 @@
 @import hexlet.code.NamedRoutes
-@import hexlet.code.model.BasePage
+@import hexlet.code.dto.BasePage
 @param BasePage page
 
 
