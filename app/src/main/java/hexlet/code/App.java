@@ -10,6 +10,7 @@ import hexlet.code.controllers.UrlController;
 import hexlet.code.repository.BaseRepository;
 import io.javalin.Javalin;
 import io.javalin.rendering.template.JavalinJte;
+import lombok.SneakyThrows;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -60,31 +61,26 @@ public class App {
         app.start(getPort());
     }
 
-
+    @SneakyThrows
     public static Javalin getApp() {
 
-        try {
-            BaseRepository.dataSource = getDB();
+        BaseRepository.dataSource = getDB();
 
-            var app = Javalin.create(javalinConfig -> {
-                javalinConfig.bundledPlugins.enableDevLogging();
-                javalinConfig.fileRenderer(new JavalinJte(createTemplateEngine()));
+        var app = Javalin.create(javalinConfig -> {
+            javalinConfig.bundledPlugins.enableDevLogging();
+            javalinConfig.fileRenderer(new JavalinJte(createTemplateEngine()));
 
-            });
-
-            app.get(NamedRoutes.rootPath(), ctx -> ctx.render("index.jte"));
-            app.get(NamedRoutes.urlsPath(), UrlController::index);
-            app.post(NamedRoutes.urlsPath(), UrlController::add);
-            app.get(NamedRoutes.urlPath("{id}"), UrlController::show);
-            app.post(NamedRoutes.urlsChecksPath("{id}"), UrlCheckController::check);
-            app.get(NamedRoutes.urlsChecksPath("{id}"), UrlController::show);
-            app.exception(Exception.class, (endpoint, ctx) -> {
-                ctx.status(404);
-                ctx.render("errors/404.jte");
-            });
-            return app;
-        } catch (Exception e) {
-            throw new RuntimeException();
-        }
+        });
+        app.get(NamedRoutes.rootPath(), ctx -> ctx.render("index.jte"));
+        app.get(NamedRoutes.urlsPath(), UrlController::index);
+        app.post(NamedRoutes.urlsPath(), UrlController::add);
+        app.get(NamedRoutes.urlPath("{id}"), UrlController::show);
+        app.post(NamedRoutes.urlsChecksPath("{id}"), UrlCheckController::check);
+        app.get(NamedRoutes.urlsChecksPath("{id}"), UrlController::show);
+        app.exception(Exception.class, (endpoint, ctx) -> {
+            ctx.status(404);
+            ctx.render("errors/404.jte");
+        });
+        return app;
     }
 }

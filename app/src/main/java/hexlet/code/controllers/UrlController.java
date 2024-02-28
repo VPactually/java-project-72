@@ -33,6 +33,7 @@ public class UrlController {
         } catch (URISyntaxException e) {
             var page = new BasePage("Некорректный URL", "danger");
             ctx.render("index.jte", Collections.singletonMap("page", page));
+            return;
         }
         var parsedUrl = new URI(url);
         var name = parsedUrl.getScheme() + "://" + parsedUrl.getAuthority();
