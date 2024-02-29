@@ -12,6 +12,7 @@ import io.javalin.http.Context;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collections;
+import java.util.Objects;
 
 public class UrlController {
     public static void index(Context ctx) {
@@ -30,8 +31,12 @@ public class UrlController {
         var url = ctx.formParamAsClass("url", String.class).get();
         try {
             var parsedUrl = new URI(url);
+            if (Objects.equals(parsedUrl.getScheme(), null) || Objects.equals(parsedUrl.getAuthority(), null)) {
+                throw new URISyntaxException(parsedUrl.toString(), "Некорректный URL");
+            }
         } catch (URISyntaxException e) {
             var page = new BasePage("Некорректный URL", "danger");
+            ctx.status(400);
             ctx.render("index.jte", Collections.singletonMap("page", page));
             return;
         }

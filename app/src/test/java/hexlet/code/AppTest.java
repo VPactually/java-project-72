@@ -53,6 +53,15 @@ public class AppTest {
     }
 
     @Test
+    void testWrongUrl() {
+        JavalinTest.test(app, (server, client) -> {
+            var response = client.post(NamedRoutes.urlsPath(), "url=qweqsdasd.ru");
+            assertThat(response.code()).isEqualTo(400);
+            assertThat(response.body().string()).contains("Некорректный URL");
+        });
+    }
+
+    @Test
     void testRegisterNewSites() {
         JavalinTest.test(app, (server, client) -> {
             var requestBody = "url=http://www.rbc.ru";
