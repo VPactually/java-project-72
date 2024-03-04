@@ -1,7 +1,8 @@
 @import hexlet.code.dto.urls.UrlsPage
 @import hexlet.code.NamedRoutes
-@import hexlet.code.repository.UrlCheckRepository
+@import hexlet.code.model.UrlCheck
 @import java.time.format.DateTimeFormatter
+@import java.util.Comparator
 @param UrlsPage page
 
 @template.layout.page(page = page,
@@ -28,21 +29,21 @@ content = @`
                     <td>
                         <a href="${NamedRoutes.urlPath(url.getId())}">${url.getName()}</a>
                     </td>
+                    @if(page.getChecks().stream().anyMatch(e -> e.getUrlId() == url.getId()))
                     <td>
-                        @if(UrlCheckRepository.find(url.getId()).isPresent())
-                            ${UrlCheckRepository.getEntitiesById(url.getId())
-                            .get(UrlCheckRepository.getEntitiesById(url.getId()).size() - 1)
-                            .getCreatedAt().toLocalDateTime()
-                            .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))}
-                        @endif
+                            ${page.getChecks().stream().filter(check -> check.getUrlId() == url.getId())
+                                                    .max(Comparator.comparing(UrlCheck::getCreatedAt))
+                                                    .get()
+                                                    .getCreatedAt().toLocalDateTime()
+                                                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))}
                     </td>
                     <td>
-                        @if(UrlCheckRepository.find(url.getId()).isPresent())
-                            ${UrlCheckRepository.getEntitiesById(url.getId())
-                            .get(UrlCheckRepository.getEntitiesById(url.getId()).size() - 1)
-                            .getStatusCode()}
-                        @endif
+                            ${page.getChecks().stream().filter(check -> check.getUrlId() == url.getId())
+                                                    .max(Comparator.comparing(UrlCheck::getCreatedAt))
+                                                    .get()
+                                                    .getStatusCode()}
                     </td>
+                    @endif
                 </tr>
             @endfor
             </tbody>

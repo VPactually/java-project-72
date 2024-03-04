@@ -19,7 +19,7 @@ public class UrlController {
         var flash = ctx.consumeSessionAttribute("flash");
         var flashInfo = ctx.consumeSessionAttribute("flashInfo");
         var page = new UrlsPage(UrlRepository.getEntities());
-
+        page.setChecks(UrlCheckRepository.getEntities());
         if (flash != null && flashInfo != null) {
             page.setFlash(flash);
             page.setFlashInfo(flashInfo.toString());

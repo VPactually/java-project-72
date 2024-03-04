@@ -86,5 +86,30 @@ public class UrlCheckRepository {
         }
     }
 
+    public static List<UrlCheck> getEntities() {
+        var sql = "SELECT * FROM url_checks";
+        try (var conn = dataSource.getConnection();
+             var preparedStatement = conn.prepareStatement(sql)) {
+            var resultSet = preparedStatement.executeQuery();
+            var result = new ArrayList<UrlCheck>();
+            while (resultSet.next()) {
+                var id = resultSet.getInt("id");
+                var urlId = resultSet.getInt("url_id");
+                var title = resultSet.getString("title");
+                var statusCode = resultSet.getInt("status_code");
+                var h1 = resultSet.getString("h1");
+                var description = resultSet.getString("description");
+                var createdAt = resultSet.getTimestamp("created_at");
+                var urlCheck = new UrlCheck(id, urlId, statusCode, title, h1, description);
+                urlCheck.setCreatedAt(createdAt);
+                result.add(urlCheck);
+            }
+            return result;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 }
+
+
