@@ -1,15 +1,12 @@
 @import hexlet.code.dto.urls.UrlsPage
 @import hexlet.code.NamedRoutes
-@import hexlet.code.model.UrlCheck
 @import java.time.format.DateTimeFormatter
-@import java.util.Comparator
 @param UrlsPage page
 
 @template.layout.page(page = page,
 content = @`
     <div class="container-lg mt-5">
         <h1>Сайты</h1>
-
         <table class="table table-bordered table-hover mt-3">
             <thead>
             <tr>
@@ -29,21 +26,19 @@ content = @`
                     <td>
                         <a href="${NamedRoutes.urlPath(url.getId())}">${url.getName()}</a>
                     </td>
-                    @if(page.getChecks().stream().anyMatch(e -> e.getUrlId() == url.getId()))
                     <td>
-                            ${page.getChecks().stream().filter(check -> check.getUrlId() == url.getId())
-                                                    .max(Comparator.comparing(UrlCheck::getCreatedAt))
-                                                    .get()
+                        @if(page.getChecks().entrySet().stream().anyMatch(e -> e.getKey() == url.getId()))
+                            ${page.getChecks().get(url.getId())
                                                     .getCreatedAt().toLocalDateTime()
                                                     .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))}
+                        @endif
                     </td>
                     <td>
-                            ${page.getChecks().stream().filter(check -> check.getUrlId() == url.getId())
-                                                    .max(Comparator.comparing(UrlCheck::getCreatedAt))
-                                                    .get()
+                        @if(page.getChecks().entrySet().stream().anyMatch(e -> e.getKey() == url.getId()))
+                            ${page.getChecks().get(url.getId())
                                                     .getStatusCode()}
+                        @endif
                     </td>
-                    @endif
                 </tr>
             @endfor
             </tbody>

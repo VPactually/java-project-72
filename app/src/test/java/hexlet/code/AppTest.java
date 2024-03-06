@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.format.DateTimeFormatter;
 
 import hexlet.code.model.Url;
 
@@ -116,6 +117,11 @@ public class AppTest {
             assertThat(lastCheck.getTitle()).isEqualTo("Example Title");
             assertThat(lastCheck.getH1()).isEqualTo("Example Domain");
             assertThat(lastCheck.getDescription()).isEqualTo("");
+
+            var afterPost = client.get(NamedRoutes.urlsPath());
+            assertThat(afterPost.code()).isEqualTo(200);
+            assertThat(afterPost.body().string()).contains(lastCheck.getCreatedAt().toLocalDateTime()
+                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
         });
     }
 }

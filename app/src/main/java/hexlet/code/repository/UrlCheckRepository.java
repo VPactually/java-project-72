@@ -6,9 +6,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 import java.util.Optional;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Date;
 
 import static hexlet.code.repository.BaseRepository.dataSource;
 
@@ -57,6 +59,31 @@ public class UrlCheckRepository {
                 return Optional.of(check);
             }
             return Optional.empty();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static Map<Integer, UrlCheck> getLastUrlsCheck() {
+
+        var sql = "SELECT * FROM url_checks GROUP BY url_id, created_at ORDER BY created_at ASC";
+        try (var conn = dataSource.getConnection();
+             var preparedStatement = conn.prepareStatement(sql)) {
+            var resultSet = preparedStatement.executeQuery();
+            Map<Integer, UrlCheck> result = new HashMap<>();
+            while (resultSet.next()) {
+                var id = resultSet.getInt("id");
+                var urlId = resultSet.getInt("url_id");
+                var statusCode = resultSet.getInt("status_code");
+                var title = resultSet.getString("title");
+                var h1 = resultSet.getString("h1");
+                var description = resultSet.getString("description");
+                var createdAt = resultSet.getTimestamp("created_at");
+                var urlCheck = new UrlCheck(id, urlId, statusCode, title, h1, description);
+                urlCheck.setCreatedAt(createdAt);
+                result.put(urlId, urlCheck);
+            }
+            return result;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

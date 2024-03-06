@@ -42,8 +42,8 @@
             <p class="m-0"> ${page.getFlash().toString()}</p>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-
     @endif
+
     ${content}
 </main>
 

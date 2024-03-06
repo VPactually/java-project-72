@@ -8,13 +8,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
 @NoArgsConstructor
 public class UrlsPage extends BasePage {
     private List<Url> urls;
-    private List<UrlCheck> checks;
+    private Map<Integer, UrlCheck> checks;
 
     public UrlsPage(List<Url> urls) {
         this.urls = urls;

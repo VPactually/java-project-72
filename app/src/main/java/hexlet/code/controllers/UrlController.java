@@ -18,8 +18,12 @@ public class UrlController {
     public static void index(Context ctx) {
         var flash = ctx.consumeSessionAttribute("flash");
         var flashInfo = ctx.consumeSessionAttribute("flashInfo");
-        var page = new UrlsPage(UrlRepository.getEntities());
-        page.setChecks(UrlCheckRepository.getEntities());
+        var page = new UrlsPage();
+
+        page.setUrls(UrlRepository.getEntities());
+        page.setChecks(UrlCheckRepository.getLastUrlsCheck());
+
+
         if (flash != null && flashInfo != null) {
             page.setFlash(flash);
             page.setFlashInfo(flashInfo.toString());
