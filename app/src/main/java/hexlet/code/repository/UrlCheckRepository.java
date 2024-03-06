@@ -66,7 +66,8 @@ public class UrlCheckRepository {
 
     public static Map<Integer, UrlCheck> getLastUrlsCheck() {
 
-        var sql = "SELECT * FROM url_checks GROUP BY url_id, created_at ORDER BY created_at ASC";
+        var sql = "SELECT * FROM url_checks WHERE created_at IN ("
+                + "SELECT MAX(created_at) FROM url_checks GROUP BY url_id)";
         try (var conn = dataSource.getConnection();
              var preparedStatement = conn.prepareStatement(sql)) {
             var resultSet = preparedStatement.executeQuery();
