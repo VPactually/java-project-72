@@ -77,10 +77,10 @@ public class App {
         app.get(NamedRoutes.urlPath("{id}"), UrlController::show);
         app.post(NamedRoutes.urlsChecksPath("{id}"), UrlCheckController::check);
         app.get(NamedRoutes.urlsChecksPath("{id}"), UrlController::show);
-        app.exception(Exception.class, (endpoint, ctx) -> {
-            ctx.status(404);
-            ctx.render("errors/404.jte");
-        });
+//        app.exception(Exception.class, (endpoint, ctx) -> {
+//            ctx.status(404);
+//            ctx.render("errors/404.jte");
+//        });
         return app;
     }
 }
