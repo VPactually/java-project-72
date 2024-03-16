@@ -66,23 +66,18 @@ public class UrlCheckRepository {
 
     public static Map<Integer, UrlCheck> getLastUrlsCheck() {
 
-        var sql = "SELECT DISTINCT uc.* "
-                + "FROM url_checks uc "
-                + "LEFT JOIN url_checks uc2 ON uc.url_id = uc2.url_id AND uc.created_at < uc2.created_at "
-                + "WHERE uc2.url_id IS NULL";
+        var sql = "SELECT url_id, status_code, MAX(created_at) as created_at FROM url_checks group by url_id";
         try (var conn = dataSource.getConnection();
              var preparedStatement = conn.prepareStatement(sql)) {
             var resultSet = preparedStatement.executeQuery();
             Map<Integer, UrlCheck> result = new HashMap<>();
             while (resultSet.next()) {
-                var id = resultSet.getInt("id");
                 var urlId = resultSet.getInt("url_id");
                 var statusCode = resultSet.getInt("status_code");
-                var title = resultSet.getString("title");
-                var h1 = resultSet.getString("h1");
-                var description = resultSet.getString("description");
                 var createdAt = resultSet.getTimestamp("created_at");
-                var urlCheck = new UrlCheck(id, urlId, statusCode, title, h1, description);
+                var urlCheck = new UrlCheck();
+                urlCheck.setUrlId(urlId);
+                urlCheck.setStatusCode(statusCode);
                 urlCheck.setCreatedAt(createdAt);
                 result.put(urlId, urlCheck);
             }

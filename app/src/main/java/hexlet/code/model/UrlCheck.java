@@ -8,6 +8,7 @@ import lombok.Setter;
 import java.sql.Timestamp;
 
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class UrlCheck {
